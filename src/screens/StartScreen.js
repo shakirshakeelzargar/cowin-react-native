@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import jwt_decode from 'jwt-decode'
 import Background from '../components/Background'
 import Logo from '../components/Logo'
 import Header from '../components/Header'
@@ -7,7 +8,23 @@ import Paragraph from '../components/Paragraph'
 import { setValue, getValue } from '../DataStore/Storage'
 
 export default function StartScreen({ navigation }) {
-
+  const checkToken = async () => {
+    try {
+      const token = await getValue('api_token')
+      if (token !== 'not_found') {
+        const decoded = jwt_decode(token)
+        const exp = decoded.exp
+        const isExp = Date.now() >= exp * 1000
+        if (isExp === false) {
+          navigation.navigate('Dashboard')
+        }
+      }
+      return ''
+    } catch (err) {
+      console.log(err.message)
+    }
+  }
+  checkToken()
   return (
     <Background>
       <Logo />
