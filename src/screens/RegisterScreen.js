@@ -8,8 +8,8 @@ import Button from '../components/Button'
 import TextInput from '../components/TextInput'
 import BackButton from '../components/BackButton'
 import { theme } from '../core/theme'
-import { emailValidator } from '../helpers/emailValidator'
-import { passwordValidator } from '../helpers/passwordValidator'
+// import { emailValidator } from '../helpers/emailValidator'
+// import { passwordValidator } from '../helpers/passwordValidator'
 import { nameValidator } from '../helpers/nameValidator'
 
 export default function RegisterScreen({ navigation }) {
@@ -19,8 +19,8 @@ export default function RegisterScreen({ navigation }) {
 
   const onSignUpPressed = () => {
     const nameError = nameValidator(name.value)
-    const emailError = emailValidator(email.value)
-    const passwordError = passwordValidator(password.value)
+    const emailError = ''
+    const passwordError = ''
     if (emailError || passwordError || nameError) {
       setName({ ...name, error: nameError })
       setEmail({ ...email, error: emailError })

@@ -11,9 +11,16 @@ import {
   Dashboard,
 } from './src/screens'
 
+import { setValue, getValue } from './src/DataStore/Storage'
+
 const Stack = createStackNavigator()
 
 export default function App() {
+  const setToken = async () => {
+    const temp=await setValue('api_token', 'initial_value')
+  }
+
+  
   return (
     <Provider theme={theme}>
       <NavigationContainer>
