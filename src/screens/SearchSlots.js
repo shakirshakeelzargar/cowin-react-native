@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Keyboard, StyleSheet, Text, View } from 'react-native'
 import { Snackbar, TextInput as TextInputDefault } from 'react-native-paper'
 import DropDown from 'react-native-paper-dropdown'
@@ -15,6 +15,8 @@ import { otpValidator } from '../helpers/otpValidator'
 import { setValue, getValue, removeValue } from '../DataStore/Storage'
 
 const SearchSlots = ({ navigation }) => {
+  const [showPin, setShowPin] = useState(false)
+  const [showDistrict, setShowDistrict] = useState(false)
   const [visible, setVisible] = useState(false)
   const [snackMessage, setSnackMessage] = useState('')
   const onToggleSnackBar = () => setVisible(!visible)
@@ -28,6 +30,16 @@ const SearchSlots = ({ navigation }) => {
     { label: '18+', value: 18 },
 
     { label: '45+', value: 45 },
+  ]
+
+  const [showSearchByDropdown, setShowSearchByDropdown] = useState(false)
+
+  const [searchBy, setSearchBy] = useState(undefined)
+
+  const searhByList = [
+    { label: 'Pincode', value: 'pincode' },
+
+    { label: 'State / District', value: 'district' },
   ]
 
   const [showVaccineDropdown, setShowVaccineDropdown] = useState(false)
@@ -103,6 +115,15 @@ const SearchSlots = ({ navigation }) => {
       navigation.navigate('CheckAvailability')
     }
   }
+  useEffect(() => {
+    if (searchBy === 'pincode') {
+      setShowDistrict(false)
+      setShowPin(true)
+    } else if (searchBy === 'district') {
+      setShowDistrict(true)
+      setShowPin(false)
+    }
+  }, [searchBy])
   return (
     <View style={styles.root}>
       <Background>
@@ -133,61 +154,82 @@ const SearchSlots = ({ navigation }) => {
         <Paragraph>Get yourself Vaccinated</Paragraph>
         <View style={{ width: '100%' }}>
           <DropDown
-            label="Age"
+            label="Search By"
             mode="outlined"
-            value={age}
-            setValue={setAge}
-            list={ageList}
-            visible={showAgeDropdown}
+            value={searchBy}
+            setValue={setSearchBy}
+            list={searhByList}
+            visible={showSearchByDropdown}
             showDropDown={() => {
               Keyboard.dismiss()
-              setShowAgeDropdown(true)
+              setShowSearchByDropdown(true)
             }}
-            onDismiss={() => setShowAgeDropdown(false)}
+            onDismiss={() => setShowSearchByDropdown(false)}
             inputProps={{
               right: <TextInputDefault.Icon name="menu-down" />,
             }}
-          />
-
-          <DropDown
-            label="Vaccine"
-            mode="outlined"
-            value={vaccine}
-            setValue={setVaccine}
-            list={vaccineList}
-            visible={showVaccineDropdown}
-            showDropDown={() => {
-              Keyboard.dismiss()
-              setShowVaccineDropdown(true)
-            }}
-            onDismiss={() => setShowVaccineDropdown(false)}
-            inputProps={{
-              right: <TextInputDefault.Icon name="menu-down" />,
-            }}
-          />
-          <TextInput
-            style={{ marginTop: 7 }}
-            label="Pin Code"
-            value={pincode.value}
-            onChangeText={(text) => {
-              //   console.log(pincode)
-              setPincode({ value: text, error: '' })
-            }}
-            error={!!pincode.error}
-            errorText={pincode.error}
-            autoCapitalize="none"
-            textContentType="phoneNumber"
           />
         </View>
-        <Button
-          disabled={searchButtonDisabled}
-          mode="contained"
-          onPress={() => {
-            startSearch()
-          }}
-        >
-          Search
-        </Button>
+        {showPin && (
+          <View style={{ width: '100%' }}>
+            <DropDown
+              label="Age"
+              mode="outlined"
+              value={age}
+              setValue={setAge}
+              list={ageList}
+              visible={showAgeDropdown}
+              showDropDown={() => {
+                Keyboard.dismiss()
+                setShowAgeDropdown(true)
+              }}
+              onDismiss={() => setShowAgeDropdown(false)}
+              inputProps={{
+                right: <TextInputDefault.Icon name="menu-down" />,
+              }}
+            />
+
+            <DropDown
+              label="Vaccine"
+              mode="outlined"
+              value={vaccine}
+              setValue={setVaccine}
+              list={vaccineList}
+              visible={showVaccineDropdown}
+              showDropDown={() => {
+                Keyboard.dismiss()
+                setShowVaccineDropdown(true)
+              }}
+              onDismiss={() => setShowVaccineDropdown(false)}
+              inputProps={{
+                right: <TextInputDefault.Icon name="menu-down" />,
+              }}
+            />
+            <TextInput
+              style={{ marginTop: 7 }}
+              label="Pin Code"
+              value={pincode.value}
+              onChangeText={(text) => {
+                //   console.log(pincode)
+                setPincode({ value: text, error: '' })
+              }}
+              error={!!pincode.error}
+              errorText={pincode.error}
+              autoCapitalize="none"
+            />
+          </View>
+        )}
+        {(showPin || showDistrict) && (
+          <Button
+            disabled={searchButtonDisabled}
+            mode="contained"
+            onPress={() => {
+              startSearch()
+            }}
+          >
+            Search
+          </Button>
+        )}
       </Background>
     </View>
   )
