@@ -1,3 +1,6 @@
+/* eslint-disable consistent-return */
+/* eslint-disable no-console */
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react'
 import jwt_decode from 'jwt-decode'
 import Background from '../components/Background'

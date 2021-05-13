@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react'
 import Background from '../components/Background'
 import Logo from '../components/Logo'
@@ -17,9 +18,9 @@ export default function Dashboard({ navigation }) {
       </Paragraph>
       <Button
         mode="outlined"
-        onPress={() => navigation.navigate('CheckAvailability')}
+        onPress={() => navigation.navigate('SearchSlots')}
       >
-        Check Availability
+        Search Slots
       </Button>
 
       <Button
@@ -31,13 +32,13 @@ export default function Dashboard({ navigation }) {
 
       <Button
         mode="outlined"
-        onPress={async () =>{
+        onPress={async () => {
           const temp = await setValue('api_token', '')
           navigation.reset({
             index: 0,
             routes: [{ name: 'StartScreen' }],
-          })}
-        }
+          })
+        }}
       >
         Logout
       </Button>

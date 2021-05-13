@@ -1,3 +1,6 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-console */
+/* eslint-disable consistent-return */
 import React, { useState } from 'react'
 import { TouchableOpacity, StyleSheet, View, Keyboard } from 'react-native'
 import { Text, Snackbar } from 'react-native-paper'
@@ -121,7 +124,6 @@ export default function LoginScreen({ navigation }) {
             error={!!phone.error}
             errorText={phone.error}
             autoCapitalize="none"
-            textContentType="phoneNumber"
           />
           <Button
             mode="contained"
