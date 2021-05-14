@@ -16,6 +16,7 @@ import { phoneValidator } from '../helpers/phoneValidator'
 import { otpValidator } from '../helpers/otpValidator'
 import { requestOtp, validateOtp } from '../DataStore/API'
 import { setValue, getValue } from '../DataStore/Storage'
+import HeaderNavBar from '../components/HeaderNavBar'
 
 export default function LoginScreen({ navigation }) {
   const [phone, setPhone] = useState({ value: '', error: '' })
@@ -100,7 +101,8 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <Background>
-      <BackButton goBack={navigation.goBack} />
+      <HeaderNavBar navigation={navigation} goBack={false} />
+      {/* <BackButton goBack={navigation.goBack} /> */}
       <Snackbar
         visible={visible}
         onDismiss={onDismissSnackBar}
@@ -114,7 +116,7 @@ export default function LoginScreen({ navigation }) {
         {snackMessage}
       </Snackbar>
       <Logo />
-      <Header>Welcome back.</Header>
+      <Header>Login with Phone</Header>
       {showPhone && (
         <View style={{ width: '100%' }}>
           <TextInput

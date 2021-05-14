@@ -1,10 +1,23 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import { Surface, Text as TextPaper } from 'react-native-paper'
+import {
+  Surface,
+  Text as TextPaper,
+  Modal,
+  Portal,
+  Text as PaperText,
+  Button,
+  Provider,
+} from 'react-native-paper'
 import { getValue } from '../DataStore/Storage'
 
-export default function AvailabilityRow({ slot_data }) {
+export default function AvailabilityRow({
+  slot_data,
+  hideModal,
+  showModal,
+  setModalContent,
+}) {
   const [age, setAge] = useState('')
   const getFilters = async () => {
     const derived_age = await getValue('age_filter')
@@ -35,14 +48,16 @@ export default function AvailabilityRow({ slot_data }) {
     )
     const new_date = new Date(ISTTime.getTime() + 86400000 * v)
     const dayName = days[new_date.getDay()]
-    const monthName = months[new_date.getMonth()]
+    const monthName = months[new_date.getMonth() + 1]
     const date = new_date.getDate()
     const fullDate = `${('0' + new_date.getDate()).slice(-2)}-${(
-      '0' + new_date.getMonth()
+      '0' +
+      (new_date.getMonth() + 1)
     ).slice(-2)}-${new_date.getFullYear()}`
     // console.log({ dayName, monthName, date, fullDate })
     return { dayName, monthName, date, fullDate }
   }
+
   return (
     <View>
       <Surface style={styles.rowSurface}>
@@ -57,18 +72,20 @@ export default function AvailabilityRow({ slot_data }) {
             {[0, 1, 2, 3, 4, 5, 6].map((v, i) => {
               const todays_date = getDate(v).date
               const fullDate = getDate(v).fullDate
+              //   console.log(fullDate)
               let todays_session = slot_data.sessions.filter(
                 (e) => e.date === fullDate
               )
               todays_session = todays_session[0]
                 ? todays_session[0]
                 : { date: 0 }
-              const slotValue =
-                fullDate === todays_session.date
-                  ? todays_session.date.split('-')[0]
-                  : 0
-                  ? todays_session.available_capacity
-                  : 0
+              let slotValue = 0
+              //   console.log(fullDate, todays_session.date)
+              if (fullDate === todays_session.date) {
+                if (todays_session.date.split('-')[0]) {
+                  slotValue = todays_session.available_capacity
+                }
+              }
               return (
                 <Surface
                   style={{
@@ -82,7 +99,16 @@ export default function AvailabilityRow({ slot_data }) {
                   }}
                   key={i}
                 >
-                  <TextPaper style={{ color: 'white' }}>{slotValue}</TextPaper>
+                  <TextPaper
+                    style={{ color: 'white', fontSize: 15 }}
+                    onPress={() => {
+                      // console.log(todays_session)
+                      setModalContent(todays_session)
+                      showModal()
+                    }}
+                  >
+                    {slotValue}
+                  </TextPaper>
                 </Surface>
               )
             })}

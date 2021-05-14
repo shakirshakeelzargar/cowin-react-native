@@ -19,6 +19,7 @@ import Paragraph from '../components/Paragraph'
 
 import { otpValidator } from '../helpers/otpValidator'
 import { setValue, getValue, removeValue } from '../DataStore/Storage'
+import HeaderNavBar from '../components/HeaderNavBar'
 
 const SearchSlots = ({ navigation }) => {
   const [showPin, setShowPin] = useState(false)
@@ -73,6 +74,8 @@ const SearchSlots = ({ navigation }) => {
   const [unfilteredData, setUnfilteredData] = useState([])
   const [filteredData, setFilteredData] = useState([])
   const filterData = (data) => {
+    // console.log("Filtering with",vaccine,age)
+    // console.log(JSON.stringify(data))
     let tempData = data
     const filtered_data = []
     for (let i = 0; i < data.length; i++) {
@@ -81,7 +84,7 @@ const SearchSlots = ({ navigation }) => {
       const filtered_session = sessions.filter(
         (e) => e.vaccine === vaccine && e.min_age_limit === age
       )
-      // console.log("Filtered")
+      // // console.log("Filtered")
       //   tempData = JSON.parse(tempData)
       tempData[i].sessions = filtered_session
       //   tempData = JSON.stringify(tempData)
@@ -115,19 +118,24 @@ const SearchSlots = ({ navigation }) => {
       }
       setSearchButtonDisabled(true)
       const response = await getCalenderByPin(pincode.value)
+      // console.log("Hereeeee: ",JSON.stringify(response.data))
       const temp2 = await setValue(
         'uuunfiltered_data',
         JSON.stringify(response.data || [])
       )
-      // console.log('this is', JSON.stringify(response.data))
+      // // console.log('this is', JSON.stringify(response.data))
+      // console.log("I am here")
       if (response.error || !response.data) {
+        // console.log("Somethis is wtong")
         setSnackMessage(`Error: ${response.message || 'Some error occured'}`)
         setVisible(true)
         setSearchButtonDisabled(false)
       } else {
-        setUnfilteredData(response.data)
+        // console.log("Nothing is wrong")
+        // setUnfilteredData(response.data)
+        // console.log(JSON.stringify(response.data))
         const filtered_data = filterData(response.data)
-        // console.log({ filteredData }, { unfilteredData }, { filtered_data })
+        // // console.log({ filteredData })
         const temp = await setValue('filtered_data', filtered_data)
 
         setSearchButtonDisabled(false)
@@ -147,11 +155,12 @@ const SearchSlots = ({ navigation }) => {
       }
       setSearchButtonDisabled(true)
       const response = await getCalenderByDistrict(state, district)
+      //   // console.log('With District id ', district, JSON.stringify(response.data))
       const temp2 = await setValue(
         'uuunfiltered_data',
         JSON.stringify(response.data || [])
       )
-      // console.log('this is', JSON.stringify(response.data))
+      // // console.log('this is', JSON.stringify(response.data))
       if (response.error || !response.data) {
         setSnackMessage(`Error: ${response.message || 'Some error occured'}`)
         setVisible(true)
@@ -159,7 +168,7 @@ const SearchSlots = ({ navigation }) => {
       } else {
         setUnfilteredData(response.data)
         const filtered_data = filterData(response.data)
-        // console.log({ filteredData }, { unfilteredData }, { filtered_data })
+        // // console.log({ filteredData }, { unfilteredData }, { filtered_data })
         const temp = await setValue('filtered_data', filtered_data)
 
         setSearchButtonDisabled(false)
@@ -206,11 +215,12 @@ const SearchSlots = ({ navigation }) => {
   return (
     <View style={styles.root}>
       <Background onPress={() => Keyboard.dismiss()}>
-        <BackButton
+        <HeaderNavBar navigation={navigation} goBack={true} />
+        {/* <BackButton
           goBack={() => {
             navigation.navigate('Dashboard')
           }}
-        />
+        /> */}
         <Snackbar
           visible={visible}
           onDismiss={onDismissSnackBar}
@@ -289,7 +299,7 @@ const SearchSlots = ({ navigation }) => {
               label="Pin Code"
               value={pincode.value}
               onChangeText={(text) => {
-                //   console.log(pincode)
+                //   // console.log(pincode)
                 setPincode({ value: text, error: '' })
               }}
               error={!!pincode.error}

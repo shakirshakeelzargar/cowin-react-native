@@ -3,11 +3,14 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable default-case */
 import React, { useEffect, useState } from 'react'
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native'
 import {
   Surface,
   Text as TextPaper,
   Button as ButtonPaper,
+  Modal,
+  Portal,
+  Provider,
 } from 'react-native-paper'
 import BackButton from '../components/BackButton'
 import Button from '../components/Button'
@@ -16,6 +19,7 @@ import Background from '../components/Background'
 
 import AvailabilityRow from '../components/AvailabilityRow'
 import { getValue, setValue } from '../DataStore/Storage'
+import HeaderNavBar from '../components/HeaderNavBar'
 
 const CheckAvailability = ({ navigation }) => {
   const [slots, setSlots] = useState([])
@@ -141,76 +145,158 @@ const CheckAvailability = ({ navigation }) => {
     }
   }
 
+  const [visible, setVisible] = React.useState(false)
+  const [modalContent, setModalContent] = React.useState({ slots: [] })
+  const showModal = () => setVisible(true)
+  const hideModal = () => setVisible(false)
+  const containerStyle = { backgroundColor: 'white', padding: 20 }
   return (
-    <View>
-      <BackButton
-        goBack={() => {
-          navigation.navigate('SearchSlots')
-        }}
-      />
-      {/* <Button
+    <Provider>
+      
+      <Portal>
+        <Modal
+          visible={visible}
+          onDismiss={hideModal}
+          contentContainerStyle={containerStyle}
+        >
+          {modalContent.date !== 0 && (
+            <View>
+              <Text style={styles.modaltext}>Date: {modalContent.date}</Text>
+              <Text style={styles.modaltext}>
+                Available Capacity: {modalContent.available_capacity}
+              </Text>
+              <Text style={styles.modaltext}>
+                Age Limit: {modalContent.min_age_limit}
+              </Text>
+              <Text style={styles.modaltext}>
+                Vaccine: {modalContent.vaccine}
+              </Text>
+              {modalContent.slots.map((v, i) => (
+                <Text style={styles.modaltext} key={i}>
+                  Slot {i + 1}: {modalContent.slots[i]}
+                </Text>
+              ))}
+              <Button
+                mode="contained"
+                onPress={() => {
+                  // hideModal()
+                  navigation.navigate('WebViewRegistration')
+                }}
+              >
+                Book Slot
+              </Button>
+            </View>
+          )}
+          {modalContent.date === 0 && (
+            <View>
+              <Text style={styles.modaltextRed}>No Slots Available</Text>
+            </View>
+          )}
+
+          {/* <Text>Date: {modalContent}</Text> */}
+
+          <Button
+            mode="contained"
+            onPress={() => {
+              hideModal()
+            }}
+          >
+            Hide
+          </Button>
+        </Modal>
+      </Portal>
+
+      <View>
+        
+        {/* <Button
         mode="contained"
         onPress={onGetCalender}
         style={{ marginTop: '10%' }}
       >
         Get Calender
       </Button> */}
-      <View style={styles.filters}>
-        <ButtonPaper
-          mode={derivedAge === '18' ? 'contained' : 'outlined'}
-          onPress={() => handleFilterChange('eighteen')}
-        >
-          {' '}
-          18+
-        </ButtonPaper>
-        <ButtonPaper
-          mode={derivedAge === '45' ? 'contained' : 'outlined'}
-          onPress={() => handleFilterChange('fourtyFive')}
-        >
-          {' '}
-          45+
-        </ButtonPaper>
-        <ButtonPaper
-          mode={derivedVaccine === 'COVAXIN' ? 'contained' : 'outlined'}
-          onPress={() => handleFilterChange('covaxin')}
-        >
-          {' '}
-          Covaxin
-        </ButtonPaper>
-        <ButtonPaper
-          mode={derivedVaccine === 'COVISHIELD' ? 'contained' : 'outlined'}
-          onPress={() => handleFilterChange('covisheild')}
-        >
-          {' '}
-          Covisheild
-        </ButtonPaper>
+      <HeaderNavBar navigation={navigation} goBack={true} />
+        <View style={styles.filters}>
+          <ButtonPaper
+            mode={derivedAge === '18' ? 'contained' : 'outlined'}
+            onPress={() => handleFilterChange('eighteen')}
+          >
+            {' '}
+            18+
+          </ButtonPaper>
+          <ButtonPaper
+            mode={derivedAge === '45' ? 'contained' : 'outlined'}
+            onPress={() => handleFilterChange('fourtyFive')}
+          >
+            {' '}
+            45+
+          </ButtonPaper>
+          <ButtonPaper
+            mode={derivedVaccine === 'COVAXIN' ? 'contained' : 'outlined'}
+            onPress={() => handleFilterChange('covaxin')}
+          >
+            {' '}
+            Covaxin
+          </ButtonPaper>
+          <ButtonPaper
+            mode={derivedVaccine === 'COVISHIELD' ? 'contained' : 'outlined'}
+            onPress={() => handleFilterChange('covisheild')}
+          >
+            {' '}
+            Covisheild
+          </ButtonPaper>
+        </View>
+        <View style={styles.dates}>
+          {[0, 1, 2, 3, 4, 5, 6].map((v) => (
+            <Surface style={styles.surface} key={v}>
+              <TextPaper style={{ color: 'white' }}>
+                {getDate(v).dayName}
+              </TextPaper>
+              <TextPaper style={{ color: 'white' }}>
+                {getDate(v).monthName} {getDate(v).date}
+              </TextPaper>
+            </Surface>
+          ))}
+        </View>
+        <ScrollView contentInset={{ bottom: 280 }}>
+          {slots.length > 0 ? (
+            slots.map((slot, i) => (
+              <AvailabilityRow
+                slot_data={slot}
+                hideModal={hideModal}
+                showModal={showModal}
+                setModalContent={setModalContent}
+                key={i}
+              />
+            ))
+          ) : (
+            <Text>No data to display</Text>
+          )}
+        </ScrollView>
       </View>
-      <View style={styles.dates}>
-        {[0, 1, 2, 3, 4, 5, 6].map((v) => (
-          <Surface style={styles.surface} key={v}>
-            <TextPaper style={{ color: 'white' }}>
-              {getDate(v).dayName}
-            </TextPaper>
-            <TextPaper style={{ color: 'white' }}>
-              {getDate(v).monthName} {getDate(v).date}
-            </TextPaper>
-          </Surface>
-        ))}
-      </View>
-      <ScrollView style={styles.scrollView}>
-        {slots.length > 0 ? (
-          slots.map((slot, i) => <AvailabilityRow slot_data={slot} key={i} />)
-        ) : (
-          <Text>No data to display</Text>
-        )}
-      </ScrollView>
-    </View>
+    </Provider>
   )
 }
 
 export default CheckAvailability
 
 const styles = StyleSheet.create({
+  modaltextRed: {
+    backgroundColor: 'red',
+    color: 'white',
+    marginBottom: 5,
+    padding: 10,
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+  modaltext: {
+    backgroundColor: '#018f51',
+    color: 'white',
+    marginBottom: 5,
+    padding: 10,
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
   surface: {
     // padding: 8,
     height: 50,
@@ -226,6 +312,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
+    marginBottom: 10,
   },
   scrollView: {
     marginTop: '3%',
@@ -240,13 +327,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   rowSlots: {
-    width: '100%',
+    width: Dimensions.get('window').width - 20,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
   },
   rowHeader: {
-    width: '100%',
+    width: Dimensions.get('window').width - 20,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -255,13 +342,13 @@ const styles = StyleSheet.create({
   rowSurface: {
     // padding: 8,
     // height: 80,
-    width: '100%',
+    width: Dimensions.get('window').width - 20,
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 10,
     borderRadius: 10,
   },
-  row: { width: '100%' },
+  row: { width: Dimensions.get('window').width - 20 },
   filters: {
     display: 'flex',
     flexDirection: 'row',

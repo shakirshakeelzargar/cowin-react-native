@@ -9,6 +9,7 @@ import Header from '../components/Header'
 import Button from '../components/Button'
 import Paragraph from '../components/Paragraph'
 import { setValue, getValue } from '../DataStore/Storage'
+import HeaderNavBar from '../components/HeaderNavBar'
 
 export default function StartScreen({ navigation }) {
   const checkToken = async () => {
@@ -30,12 +31,15 @@ export default function StartScreen({ navigation }) {
   checkToken()
   return (
     <Background>
+      <HeaderNavBar navigation={navigation} goBack={false} />
       <Logo />
-      <Header>Welcome to Cowin</Header>
+      <Header>Cowin Vaccine India</Header>
       <Paragraph>Get yourself Vaccinated</Paragraph>
       <Button
         mode="contained"
-        onPress={() => navigation.navigate('LoginScreen')}
+        onPress={() => {
+          navigation.navigate('LoginScreen')
+        }}
       >
         Book Vaccination
       </Button>

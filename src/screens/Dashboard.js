@@ -6,15 +6,16 @@ import Header from '../components/Header'
 import Paragraph from '../components/Paragraph'
 import Button from '../components/Button'
 import { setValue } from '../DataStore/Storage'
+import HeaderNavBar from '../components/HeaderNavBar'
 
 export default function Dashboard({ navigation }) {
   return (
     <Background>
+      <HeaderNavBar navigation={navigation} goBack={false} />
       <Logo />
       <Header>Let’s start</Header>
       <Paragraph>
-        Your amazing app starts here. Open you favorite code editor and start
-        editing this project.
+        Select your option below.
       </Paragraph>
       <Button
         mode="outlined"

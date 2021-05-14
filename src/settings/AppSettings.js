@@ -1,0 +1,1 @@
+export const AppDetails = { version: '1.0.0' }
