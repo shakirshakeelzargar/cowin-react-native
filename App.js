@@ -4,11 +4,13 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { theme } from './src/core/theme'
 import {
+  CertificateDownload, 
   StartScreen,
   LoginScreen,
   RegisterScreen,
   ResetPasswordScreen,
   Dashboard,
+  ViewPdf
 } from './src/screens'
 
 import { setValue, getValue } from './src/DataStore/Storage'
@@ -25,7 +27,7 @@ export default function App() {
     <Provider theme={theme}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="StartScreen"
+          initialRouteName="CertificateDownload"
           screenOptions={{
             headerShown: false,
           }}
@@ -34,6 +36,10 @@ export default function App() {
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
           <Stack.Screen name="Dashboard" component={Dashboard} />
+          <Stack.Screen name="CertificateDownload" component={CertificateDownload} />
+          <Stack.Screen name="ViewPdf" component={ViewPdf} />
+
+
           <Stack.Screen
             name="ResetPasswordScreen"
             component={ResetPasswordScreen}

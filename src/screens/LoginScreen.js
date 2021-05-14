@@ -31,6 +31,7 @@ export default function LoginScreen({ navigation }) {
   const onToggleSnackBar = () => setVisible(!visible)
 
   const onDismissSnackBar = () => setVisible(false)
+ 
   const onValidateOtp = async () => {
     const otpError = otpValidator(otp.value)
     if (otpError) {
