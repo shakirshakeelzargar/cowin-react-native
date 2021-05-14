@@ -1,6 +1,10 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-console */
+/* eslint-disable consistent-return */
 import React, { useState } from 'react'
-import { TouchableOpacity, StyleSheet, View } from 'react-native'
+import { TouchableOpacity, StyleSheet, View, Keyboard } from 'react-native'
 import { Text, Snackbar } from 'react-native-paper'
+import jwt_decode from 'jwt-decode'
 import Background from '../components/Background'
 import Logo from '../components/Logo'
 import Header from '../components/Header'
@@ -38,12 +42,13 @@ export default function LoginScreen({ navigation }) {
       setOtp({ ...otp, error: otpError })
       return ''
     }
+    Keyboard.dismiss()
     setOptButtonText('Validating OTP...')
     setDisabledOtpButton(true)
     const response = await validateOtp(otp.value, txnId)
-    console.log(response)
+    // console.log(response)
     if (response.error || response.status === 400 || !response.token) {
-      console.log(response)
+      // console.log(response)
       setDisabledOtpButton(false)
       setOptButtonText('Validate OTP')
       setSnackMessage(
@@ -52,6 +57,8 @@ export default function LoginScreen({ navigation }) {
       setVisible(true)
     } else {
       const temp = await setValue('api_token', response.token)
+      const decoded = jwt_decode(response.token)
+      // console.log(decoded)
       navigation.reset({
         index: 0,
         routes: [{ name: 'Dashboard' }],
@@ -65,12 +72,13 @@ export default function LoginScreen({ navigation }) {
       setPhone({ ...phone, error: phoneError })
       return ''
     }
+    Keyboard.dismiss()
     setReqButtontext('Requesting...')
     setDisableReqButton(true)
     const response = await requestOtp(phone.value)
-    console.log(response)
+    // console.log(response)
     if (response.error || response.status === 400 || !response.txnId) {
-      console.log(response)
+      // console.log(response)
       setDisableReqButton(false)
       setReqButtontext('Request OTP')
       setPhoneInputDisabledState(false)
@@ -108,7 +116,7 @@ export default function LoginScreen({ navigation }) {
       <Logo />
       <Header>Welcome back.</Header>
       {showPhone && (
-        <View>
+        <View style={{ width: '100%' }}>
           <TextInput
             label="Phone Number"
             returnKeyType="next"
@@ -117,9 +125,6 @@ export default function LoginScreen({ navigation }) {
             error={!!phone.error}
             errorText={phone.error}
             autoCapitalize="none"
-            autoCompleteType="phone"
-            textContentType="phoneNumber"
-            keyboardType="phone-number"
           />
           <Button
             mode="contained"
@@ -131,7 +136,7 @@ export default function LoginScreen({ navigation }) {
         </View>
       )}
       {showOtp && (
-        <View>
+        <View style={{ width: '100%' }}>
           <TextInput
             label="Otp"
             returnKeyType="done"

@@ -1,4 +1,6 @@
-import React from 'react'
+/* eslint-disable no-unused-vars */
+import React, { useState, useEffect } from 'react'
+import jwt_decode from 'jwt-decode'
 import { Provider } from 'react-native-paper'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
@@ -6,11 +8,13 @@ import { theme } from './src/core/theme'
 import {
   CertificateDownload, 
   StartScreen,
+  CheckAvailability,
   LoginScreen,
   RegisterScreen,
   ResetPasswordScreen,
   Dashboard,
-  ViewPdf
+  ViewPdf,
+  SearchSlots,
 } from './src/screens'
 
 import { setValue, getValue } from './src/DataStore/Storage'
@@ -18,11 +22,6 @@ import { setValue, getValue } from './src/DataStore/Storage'
 const Stack = createStackNavigator()
 
 export default function App() {
-  const setToken = async () => {
-    const temp=await setValue('api_token', 'initial_value')
-  }
-
-  
   return (
     <Provider theme={theme}>
       <NavigationContainer>
@@ -33,6 +32,11 @@ export default function App() {
           }}
         >
           <Stack.Screen name="StartScreen" component={StartScreen} />
+          <Stack.Screen
+            name="CheckAvailability"
+            component={CheckAvailability}
+          />
+          <Stack.Screen name="SearchSlots" component={SearchSlots} />
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
           <Stack.Screen name="Dashboard" component={Dashboard} />
