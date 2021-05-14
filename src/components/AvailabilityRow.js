@@ -63,16 +63,26 @@ export default function AvailabilityRow({ slot_data }) {
               todays_session = todays_session[0]
                 ? todays_session[0]
                 : { date: 0 }
-
+              const slotValue =
+                fullDate === todays_session.date
+                  ? todays_session.date.split('-')[0]
+                  : 0
+                  ? todays_session.available_capacity
+                  : 0
               return (
-                <Surface style={styles.slotsSurface} key={i}>
-                  <TextPaper style={{ color: 'white' }}>
-                    {fullDate === todays_session.date
-                      ? todays_session.date.split('-')[0]
-                      : 0
-                      ? todays_session.available_capacity
-                      : 0}
-                  </TextPaper>
+                <Surface
+                  style={{
+                    backgroundColor: slotValue > 0 ? '#018f51' : 'red',
+                    height: 20,
+                    width: 50,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    elevation: 4,
+                    borderRadius: 10,
+                  }}
+                  key={i}
+                >
+                  <TextPaper style={{ color: 'white' }}>{slotValue}</TextPaper>
                 </Surface>
               )
             })}

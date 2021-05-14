@@ -45,9 +45,9 @@ export default function LoginScreen({ navigation }) {
     setOptButtonText('Validating OTP...')
     setDisabledOtpButton(true)
     const response = await validateOtp(otp.value, txnId)
-    console.log(response)
+    // console.log(response)
     if (response.error || response.status === 400 || !response.token) {
-      console.log(response)
+      // console.log(response)
       setDisabledOtpButton(false)
       setOptButtonText('Validate OTP')
       setSnackMessage(
@@ -57,7 +57,7 @@ export default function LoginScreen({ navigation }) {
     } else {
       const temp = await setValue('api_token', response.token)
       const decoded = jwt_decode(response.token)
-      console.log(decoded)
+      // console.log(decoded)
       navigation.reset({
         index: 0,
         routes: [{ name: 'Dashboard' }],
@@ -75,9 +75,9 @@ export default function LoginScreen({ navigation }) {
     setReqButtontext('Requesting...')
     setDisableReqButton(true)
     const response = await requestOtp(phone.value)
-    console.log(response)
+    // console.log(response)
     if (response.error || response.status === 400 || !response.txnId) {
-      console.log(response)
+      // console.log(response)
       setDisableReqButton(false)
       setReqButtontext('Request OTP')
       setPhoneInputDisabledState(false)

@@ -62,7 +62,7 @@ export const getStates = async () => {
 
   try {
     const response = await axios(config)
-    return response.data
+    return response.data.states
   } catch (err) {
     return { error: true, message: err.message }
   }
@@ -79,7 +79,7 @@ export const getDistrictsByState = async (stateId) => {
   }
   try {
     const response = await axios(config)
-    return response.data
+    return response.data.districts
   } catch (err) {
     return { error: true, message: err.message }
   }
@@ -103,7 +103,7 @@ export const getCalenderByPin = async (pincode) => {
       'Accept-Language': 'hi_IN',
     },
   }
-  console.log(config)
+  // console.log(config)
   try {
     const response = await axios(config)
     // console.log(response.data)
@@ -423,6 +423,35 @@ export const getCalenderByPin = async (pincode) => {
         ],
       },
     }
+
+    return { data: response.data.centers }
+  } catch (err) {
+    return { error: true, message: err.message, data: [] }
+  }
+}
+
+export const getCalenderByDistrict = async (state, district) => {
+  const currentTime = new Date()
+
+  const ISTTime = new Date(
+    currentTime.getTime() + (330 + currentTime.getTimezoneOffset()) * 60000
+  )
+  const dd_mm_yyyy = `${('0' + ISTTime.getDate()).slice(-2)}-${(
+    '0' + ISTTime.getMonth()
+  ).slice(-2)}-${ISTTime.getFullYear()}`
+
+  const config = {
+    method: 'get',
+    url: `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=${district}&date=${dd_mm_yyyy}`,
+    headers: {
+      accept: 'application/json',
+      'Accept-Language': 'hi_IN',
+    },
+  }
+
+  try {
+    const response = await axios(config)
+    // console.log(response.data)
 
     return { data: response.data.centers }
   } catch (err) {

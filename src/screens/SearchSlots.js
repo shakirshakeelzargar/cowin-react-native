@@ -10,7 +10,12 @@ import Button from '../components/Button'
 import Header from '../components/Header'
 import Logo from '../components/Logo'
 import Paragraph from '../components/Paragraph'
-import { getCalenderByPin } from '../DataStore/API'
+import {
+  getCalenderByPin,
+  getStates,
+  getDistrictsByState,
+  getCalenderByDistrict,
+} from '../DataStore/API'
 import { otpValidator } from '../helpers/otpValidator'
 import { setValue, getValue, removeValue } from '../DataStore/Storage'
 
@@ -31,6 +36,18 @@ const SearchSlots = ({ navigation }) => {
 
     { label: '45+', value: 45 },
   ]
+
+  const [showStateDropdown, setShowStateDropdown] = useState(false)
+
+  const [state, setState] = useState(undefined)
+
+  const [stateList, setStateList] = useState([])
+
+  const [showDistrictDropdown, setShowDistrictDropdown] = useState(false)
+
+  const [district, setDistrict] = useState(undefined)
+
+  const [districtList, setDistrictList] = useState([])
 
   const [showSearchByDropdown, setShowSearchByDropdown] = useState(false)
 
@@ -78,41 +95,75 @@ const SearchSlots = ({ navigation }) => {
     const tempp = await setValue('age_filter', String(age))
     const tempp2 = await setValue('vaccine_filter', vaccine)
     // const removeTemp = await removeValue('filtered_data')
-    const pincodeError = otpValidator(pincode.value)
-    if (pincodeError) {
-      setPincode({ ...pincode, error: pincodeError })
-      return ''
-    }
-    Keyboard.dismiss()
-    if (!vaccine && !age) {
-      setSnackMessage('Please select Age and Vaccine')
-      setVisible(true)
-    } else if (!vaccine) {
-      setSnackMessage('Please select Vaccine')
-      setVisible(true)
-    } else if (!age) {
-      setSnackMessage('Please select Age')
-      setVisible(true)
-    }
-    setSearchButtonDisabled(true)
-    const response = await getCalenderByPin(pincode.value)
-    const temp2 = await setValue(
-      'uuunfiltered_data',
-      JSON.stringify(response.data || [])
-    )
-    // console.log('this is', JSON.stringify(response.data))
-    if (response.error || !response.data) {
-      setSnackMessage(`Error: ${response.message || 'Some error occured'}`)
-      setVisible(true)
-      setSearchButtonDisabled(false)
-    } else {
-      setUnfilteredData(response.data)
-      const filtered_data = filterData(response.data)
-      // console.log({ filteredData }, { unfilteredData }, { filtered_data })
-      const temp = await setValue('filtered_data', filtered_data)
+    if (showPin) {
+      const pincodeError = otpValidator(pincode.value)
+      if (pincodeError) {
+        setPincode({ ...pincode, error: pincodeError })
+        return ''
+      }
+      Keyboard.dismiss()
+      if (!vaccine && !age) {
+        setSnackMessage('Please select Age and Vaccine')
+        setVisible(true)
+      } else if (!vaccine) {
+        setSnackMessage('Please select Vaccine')
+        setVisible(true)
+      } else if (!age) {
+        setSnackMessage('Please select Age')
+        setVisible(true)
+      }
+      setSearchButtonDisabled(true)
+      const response = await getCalenderByPin(pincode.value)
+      const temp2 = await setValue(
+        'uuunfiltered_data',
+        JSON.stringify(response.data || [])
+      )
+      // console.log('this is', JSON.stringify(response.data))
+      if (response.error || !response.data) {
+        setSnackMessage(`Error: ${response.message || 'Some error occured'}`)
+        setVisible(true)
+        setSearchButtonDisabled(false)
+      } else {
+        setUnfilteredData(response.data)
+        const filtered_data = filterData(response.data)
+        // console.log({ filteredData }, { unfilteredData }, { filtered_data })
+        const temp = await setValue('filtered_data', filtered_data)
 
-      setSearchButtonDisabled(false)
-      navigation.navigate('CheckAvailability')
+        setSearchButtonDisabled(false)
+        navigation.navigate('CheckAvailability')
+      }
+    } else if (showDistrict) {
+      Keyboard.dismiss()
+      if (!vaccine || !age) {
+        setSnackMessage('Please select Age and Vaccine')
+        setVisible(true)
+      } else if (!state) {
+        setSnackMessage('Please select State')
+        setVisible(true)
+      } else if (!district) {
+        setSnackMessage('Please select District')
+        setVisible(true)
+      }
+      setSearchButtonDisabled(true)
+      const response = await getCalenderByDistrict(state, district)
+      const temp2 = await setValue(
+        'uuunfiltered_data',
+        JSON.stringify(response.data || [])
+      )
+      // console.log('this is', JSON.stringify(response.data))
+      if (response.error || !response.data) {
+        setSnackMessage(`Error: ${response.message || 'Some error occured'}`)
+        setVisible(true)
+        setSearchButtonDisabled(false)
+      } else {
+        setUnfilteredData(response.data)
+        const filtered_data = filterData(response.data)
+        // console.log({ filteredData }, { unfilteredData }, { filtered_data })
+        const temp = await setValue('filtered_data', filtered_data)
+
+        setSearchButtonDisabled(false)
+        navigation.navigate('CheckAvailability')
+      }
     }
   }
   useEffect(() => {
@@ -124,9 +175,36 @@ const SearchSlots = ({ navigation }) => {
       setShowPin(false)
     }
   }, [searchBy])
+
+  useEffect(() => {
+    const loadStates = async () => {
+      const responsee = await getStates()
+      const filteredStates = responsee.map((v) => ({
+        label: v.state_name,
+        value: v.state_id,
+      }))
+      setStateList(filteredStates)
+    }
+    if (showDistrict === true) {
+      loadStates()
+    }
+  }, [showDistrict])
+
+  useEffect(() => {
+    const loadDistricts = async () => {
+      const responsee = await getDistrictsByState(String(state))
+      const filteredDistricts = responsee.map((v) => ({
+        label: v.district_name,
+        value: v.district_id,
+      }))
+      setDistrictList(filteredDistricts)
+    }
+    loadDistricts()
+  }, [state])
+
   return (
     <View style={styles.root}>
-      <Background>
+      <Background onPress={() => Keyboard.dismiss()}>
         <BackButton
           goBack={() => {
             navigation.navigate('Dashboard')
@@ -149,9 +227,9 @@ const SearchSlots = ({ navigation }) => {
           navigation.navigate('Dashboard')
         }}
       /> */}
-        <Logo />
-        <Header>Welcome to Cowin</Header>
-        <Paragraph>Get yourself Vaccinated</Paragraph>
+        {/* <Logo /> */}
+        <Header>Search Vaccination Slots</Header>
+        {/* <Paragraph>Get yourself Vaccinated</Paragraph> */}
         <View style={{ width: '100%' }}>
           <DropDown
             label="Search By"
@@ -216,6 +294,77 @@ const SearchSlots = ({ navigation }) => {
               error={!!pincode.error}
               errorText={pincode.error}
               autoCapitalize="none"
+            />
+          </View>
+        )}
+
+        {showDistrict && (
+          <View style={{ width: '100%' }}>
+            <DropDown
+              label="Age"
+              mode="outlined"
+              value={age}
+              setValue={setAge}
+              list={ageList}
+              visible={showAgeDropdown}
+              showDropDown={() => {
+                Keyboard.dismiss()
+                setShowAgeDropdown(true)
+              }}
+              onDismiss={() => setShowAgeDropdown(false)}
+              inputProps={{
+                right: <TextInputDefault.Icon name="menu-down" />,
+              }}
+            />
+
+            <DropDown
+              label="Vaccine"
+              mode="outlined"
+              value={vaccine}
+              setValue={setVaccine}
+              list={vaccineList}
+              visible={showVaccineDropdown}
+              showDropDown={() => {
+                Keyboard.dismiss()
+                setShowVaccineDropdown(true)
+              }}
+              onDismiss={() => setShowVaccineDropdown(false)}
+              inputProps={{
+                right: <TextInputDefault.Icon name="menu-down" />,
+              }}
+            />
+            <DropDown
+              label="State"
+              mode="outlined"
+              value={state}
+              setValue={setState}
+              list={stateList}
+              visible={showStateDropdown}
+              showDropDown={() => {
+                Keyboard.dismiss()
+                setShowStateDropdown(true)
+              }}
+              onDismiss={() => setShowStateDropdown(false)}
+              inputProps={{
+                right: <TextInputDefault.Icon name="menu-down" />,
+              }}
+            />
+
+            <DropDown
+              label="District"
+              mode="outlined"
+              value={district}
+              setValue={setDistrict}
+              list={districtList}
+              visible={showDistrictDropdown}
+              showDropDown={() => {
+                Keyboard.dismiss()
+                setShowDistrictDropdown(true)
+              }}
+              onDismiss={() => setShowDistrictDropdown(false)}
+              inputProps={{
+                right: <TextInputDefault.Icon name="menu-down" />,
+              }}
             />
           </View>
         )}
