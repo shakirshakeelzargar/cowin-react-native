@@ -17,13 +17,6 @@ export default function Dashboard({ navigation }) {
         editing this project.
       </Paragraph>
       <Button
-        mode="contained"
-        onPress={() => navigation.navigate('CertificateDownload')}
-      >
-        Download Certificate
-      </Button>
-     
-      <Button
         mode="outlined"
         onPress={() => navigation.navigate('SearchSlots')}
       >

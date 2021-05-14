@@ -3,6 +3,12 @@ import React, { useEffect, useState } from 'react'
 import { Keyboard, StyleSheet, Text, View } from 'react-native'
 import { Snackbar, TextInput as TextInputDefault } from 'react-native-paper'
 import DropDown from 'react-native-paper-dropdown'
+import {
+  getCalenderByPin,
+  getStates,
+  getDistrictsByState,
+  getCalenderByDistrict,
+} from '../DataStore/API'
 import TextInput from '../components/TextInput'
 import BackButton from '../components/BackButton'
 import Background from '../components/Background'
@@ -10,12 +16,7 @@ import Button from '../components/Button'
 import Header from '../components/Header'
 import Logo from '../components/Logo'
 import Paragraph from '../components/Paragraph'
-import {
-  getCalenderByPin,
-  getStates,
-  getDistrictsByState,
-  getCalenderByDistrict,
-} from '../DataStore/API'
+
 import { otpValidator } from '../helpers/otpValidator'
 import { setValue, getValue, removeValue } from '../DataStore/Storage'
 

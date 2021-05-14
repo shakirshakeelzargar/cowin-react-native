@@ -12,6 +12,8 @@ import {
 import BackButton from '../components/BackButton'
 import Button from '../components/Button'
 import { getCalenderByPin } from '../DataStore/API'
+import Background from '../components/Background'
+
 import AvailabilityRow from '../components/AvailabilityRow'
 import { getValue, setValue } from '../DataStore/Storage'
 

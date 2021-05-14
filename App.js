@@ -6,7 +6,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { theme } from './src/core/theme'
 import {
-  CertificateDownload, 
+  CertificateDownload,
   StartScreen,
   CheckAvailability,
   LoginScreen,
@@ -26,7 +26,7 @@ export default function App() {
     <Provider theme={theme}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="CertificateDownload"
+          initialRouteName="StartScreen"
           screenOptions={{
             headerShown: false,
           }}
@@ -40,9 +40,11 @@ export default function App() {
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
           <Stack.Screen name="Dashboard" component={Dashboard} />
-          <Stack.Screen name="CertificateDownload" component={CertificateDownload} />
+          <Stack.Screen
+            name="CertificateDownload"
+            component={CertificateDownload}
+          />
           <Stack.Screen name="ViewPdf" component={ViewPdf} />
-
 
           <Stack.Screen
             name="ResetPasswordScreen"
