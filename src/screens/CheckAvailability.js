@@ -2,7 +2,7 @@
 /* eslint-disable no-case-declarations */
 /* eslint-disable no-unused-vars */
 /* eslint-disable default-case */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   Dimensions,
   ScrollView,
@@ -31,12 +31,15 @@ import { getValue, setValue } from '../DataStore/Storage'
 import HeaderNavBar from '../components/HeaderNavBar'
 
 const CheckAvailability = ({ navigation }) => {
-  const isMounted = useIsMounted()
+  // const isMounted = useIsMounted()
   const [slots, setSlots] = useState('loading')
   const [isCallData, setIsCallData] = useState(true)
   const [derivedAge, setDerivedAge] = useState('')
   const [derivedVaccine, setDerivedVaccine] = useState('')
+  const [filterChanged, setFilterChanged] = useState(false)
   const [firstTime, setFirstTime] = useState(true)
+  const firstUpdate = useRef(true)
+
   const getFilters = async () => {
     const derived_age = await getValue('age_filter')
     const derived_vaccine = await getValue('vaccine_filter')
@@ -124,6 +127,7 @@ const CheckAvailability = ({ navigation }) => {
     // console.log(tempData)
     return tempData
   }
+
   useEffect(() => {
     if (!firstTime) {
       const updateData = async () => {
@@ -138,28 +142,35 @@ const CheckAvailability = ({ navigation }) => {
     } else {
       setFirstTime(false)
     }
-  }, [derivedAge, derivedVaccine])
+  }, [filterChanged])
+
+
+
   const handleFilterChange = async (fil) => {
     switch (fil) {
       case 'covaxin':
         setFilters({ ...filters, covaxin: !filters[fil] })
         const tempp2 = await setValue('vaccine_filter', 'COVAXIN')
         setDerivedVaccine('COVAXIN')
+        setFilterChanged(!filterChanged)
         break
       case 'covisheild':
         setFilters({ ...filters, covisheild: !filters[fil] })
         const tempp3 = await setValue('vaccine_filter', 'COVISHIELD')
         setDerivedVaccine('COVISHIELD')
+        setFilterChanged(!filterChanged)
         break
       case 'eighteen':
         setFilters({ ...filters, eighteen: !filters[fil] })
         const tempp4 = await setValue('age_filter', '18')
         setDerivedAge('18')
+        setFilterChanged(!filterChanged)
         break
       case 'fourtyFive':
         setFilters({ ...filters, fourtyFive: !filters[fil] })
         const tempp5 = await setValue('age_filter', '45')
         setDerivedAge('45')
+        setFilterChanged(!filterChanged)
         break
     }
   }
