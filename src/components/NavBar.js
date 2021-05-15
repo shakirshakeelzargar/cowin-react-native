@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { List } from 'react-native-paper'
 import Logo from './Logo'
 
@@ -12,7 +12,7 @@ const NavBar = ({ navigation }) => {
           title="Vaccine Home"
           left={(props) => <List.Icon {...props} icon="home" />}
           onPress={() => {
-            console.log('Pressed')
+            // console.log('Pressed')
             navigation.navigate('StartScreen')
           }}
         />
@@ -20,7 +20,7 @@ const NavBar = ({ navigation }) => {
           title="Check for Updates"
           left={(props) => <List.Icon {...props} icon="update" />}
           onPress={() => {
-            console.log('Pressed')
+            // console.log('Pressed')
             navigation.navigate('UpdateScreen')
           }}
         />
@@ -28,9 +28,9 @@ const NavBar = ({ navigation }) => {
           title="Developers"
           left={(props) => <List.Icon {...props} icon="code-tags" />}
           onPress={() => {
-            console.log('Pressed')
+            // console.log('Pressed')
             navigation.navigate('DeveloperScreen')
-            console.log('Pressed')
+            // console.log('Pressed')
           }}
         />
       </View>

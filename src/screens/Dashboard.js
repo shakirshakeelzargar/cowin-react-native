@@ -14,9 +14,7 @@ export default function Dashboard({ navigation }) {
       <HeaderNavBar navigation={navigation} goBack={false} />
       <Logo />
       <Header>Let’s start</Header>
-      <Paragraph>
-        Select your option below.
-      </Paragraph>
+      <Paragraph>Select your option below.</Paragraph>
       <Button
         mode="outlined"
         onPress={() => navigation.navigate('SearchSlots')}

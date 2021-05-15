@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-boolean-value */
 /* eslint-disable radix */
 /* eslint-disable no-case-declarations */
 /* eslint-disable no-unused-vars */
@@ -144,8 +145,6 @@ const CheckAvailability = ({ navigation }) => {
     }
   }, [filterChanged])
 
-
-
   const handleFilterChange = async (fil) => {
     switch (fil) {
       case 'covaxin':
@@ -180,21 +179,7 @@ const CheckAvailability = ({ navigation }) => {
   const showModal = () => setVisible(true)
   const hideModal = () => setVisible(false)
   const containerStyle = { backgroundColor: 'white', padding: 20 }
-  // const resetAction = StackActions.reset({
-  //   index: 0,
-  //   actions: [NavigationActions.navigate({ routeName: 'SearchSlots' })],
-  // })
-  // const resetActionFunction = navigation.reset({
-  //   index: 0,
-  //   routes: [{ name: 'SearchSlots' }],
-  // })
-  // const onFocus = () => {
-  //   getSlotData()
-  //   unsubscribe()
-  // }
-  // const unsubscribe = navigation.addListener('focus', () => {
-  //   onFocus()
-  // })
+
   return (
     <Provider>
       <Portal>

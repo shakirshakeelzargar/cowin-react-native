@@ -2,16 +2,9 @@
 /* eslint-disable no-console */
 /* eslint-disable consistent-return */
 import React, { useState } from 'react'
-import {
-  TouchableOpacity,
-  StyleSheet,
-  View,
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native'
+import { StyleSheet, View, Keyboard } from 'react-native'
 import CountDown from 'react-native-countdown-component'
-import { Text, Snackbar } from 'react-native-paper'
+import { Snackbar } from 'react-native-paper'
 import jwt_decode from 'jwt-decode'
 import Background from '../components/Background'
 import Logo from '../components/Logo'
@@ -104,10 +97,6 @@ export default function LoginScreen({ navigation }) {
       setCounter(180)
       setDisabled(true)
     }
-    // navigation.reset({
-    //   index: 0,
-    //   routes: [{ name: 'Dashboard' }],
-    // })
   }
   const changeNumber = () => {
     setShowPhone(true)

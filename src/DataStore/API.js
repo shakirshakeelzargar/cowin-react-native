@@ -218,7 +218,7 @@ export const getCalenderByDistrict = async (state, district) => {
 export const checkAppUpdate = async () => {
   const config = {
     method: 'get',
-    url: 'https://vaccineapp.blueturrets.com/',
+    url: 'https://shakirshakeel.com/vaccineapp/checkVersion',
     headers: {
       'User-Agent':
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',},

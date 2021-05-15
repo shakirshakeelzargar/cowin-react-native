@@ -1,31 +1,32 @@
+/* eslint-disable react/jsx-boolean-value */
 /* eslint-disable consistent-return */
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Image, View } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
-import { IconButton, Colors, Text } from 'react-native-paper'
+import { Linking, Platform, StyleSheet, View } from 'react-native'
 
 import Background from '../components/Background'
-import Logo from '../components/Logo'
 import Header from '../components/Header'
 import Button from '../components/Button'
-import Paragraph from '../components/Paragraph'
 import HeaderNavBar from '../components/HeaderNavBar'
 import { AppDetails } from '../settings/AppSettings'
 import { checkAppUpdate } from '../DataStore/API'
+
 export default function UpdateScreen({ navigation }) {
   const [version, setVersion] = useState(AppDetails.version)
   const [check, setCheck] = useState(true)
+  const [androidUrl, setAndroidUrl] = useState('')
+  const [iosUrl, setIosUrl] = useState('')
   useEffect(() => {
     const getUpdate = async () => {
       const response = await checkAppUpdate()
-      console.log(response.data.version,AppDetails.version)
-      if (response.data.version!==AppDetails.version) {
-        console.log("will set")
+      // console.log(response.data.version, AppDetails.version)
+      if (response.data.version !== AppDetails.version) {
+        console.log('will set')
         setVersion(response.data.version)
+        setIosUrl(response.data.ios_url)
+        setAndroidUrl(response.data.android_url)
       }
-
     }
     getUpdate()
   }, [check])
@@ -51,19 +52,17 @@ export default function UpdateScreen({ navigation }) {
           <Button
             mode="outlined"
             onPress={() => {
-              console.log('Downloading Update')
+              if (Platform.OS === 'ios') {
+                Linking.openURL(iosUrl)
+              } else {
+                Linking.openURL(androidUrl)
+              }
             }}
           >
             Download Update
           </Button>
         </View>
       )}
-      {/* <Button
-        mode="outlined"
-        onPress={() => navigation.navigate('RegisterScreen')}
-      >
-        Sign Up
-      </Button> */}
     </Background>
   )
 }

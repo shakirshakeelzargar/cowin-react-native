@@ -1,25 +1,19 @@
+/* eslint-disable react/jsx-boolean-value */
 /* eslint-disable consistent-return */
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react'
 import { StyleSheet, Image, View, Linking } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome'
 import { IconButton, Colors } from 'react-native-paper'
 
 import Background from '../components/Background'
-import Logo from '../components/Logo'
-import Header from '../components/Header'
-import Button from '../components/Button'
-import Paragraph from '../components/Paragraph'
 import HeaderNavBar from '../components/HeaderNavBar'
 
 export default function StartScreen({ navigation }) {
   return (
     <Background>
       <HeaderNavBar navigation={navigation} goBack={true} />
-      {/* <Logo /> */}
 
-      {/* <Header>Shakir Shakeel</Header> */}
       <View style={styles.icons}>
         <Image
           style={styles.image}
@@ -64,7 +58,6 @@ export default function StartScreen({ navigation }) {
         />
       </View>
 
-      {/* <Header>Ashir Ehsan</Header> */}
       <View style={styles.icons}>
         <Image
           style={styles.image}
@@ -96,13 +89,6 @@ export default function StartScreen({ navigation }) {
           onPress={() => console.log('Pressed')}
         />
       </View>
-
-      {/* <Button
-        mode="outlined"
-        onPress={() => navigation.navigate('RegisterScreen')}
-      >
-        Sign Up
-      </Button> */}
     </Background>
   )
 }

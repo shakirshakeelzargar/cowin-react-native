@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-boolean-value */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import { Keyboard, StyleSheet, Text, View } from 'react-native'
@@ -10,15 +11,11 @@ import {
   getCalenderByDistrict,
 } from '../DataStore/API'
 import TextInput from '../components/TextInput'
-import BackButton from '../components/BackButton'
 import Background from '../components/Background'
 import Button from '../components/Button'
 import Header from '../components/Header'
-import Logo from '../components/Logo'
-import Paragraph from '../components/Paragraph'
-
 import { otpValidator } from '../helpers/otpValidator'
-import { setValue, getValue, removeValue } from '../DataStore/Storage'
+import { setValue } from '../DataStore/Storage'
 import HeaderNavBar from '../components/HeaderNavBar'
 
 const SearchSlots = ({ navigation }) => {

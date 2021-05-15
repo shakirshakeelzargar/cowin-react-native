@@ -1,17 +1,14 @@
 /* eslint-disable no-unreachable */
 import React, { useState } from 'react'
+import { Snackbar } from 'react-native-paper'
 import Background from '../components/Background'
 import Logo from '../components/Logo'
 import Header from '../components/Header'
 import Button from '../components/Button'
-import Paragraph from '../components/Paragraph'
 import { setValue, getValue } from '../DataStore/Storage'
 import TextInput from '../components/TextInput'
 import { getCertificate } from '../DataStore/API'
-import { TouchableOpacity, StyleSheet, View } from 'react-native'
-import { Text, Snackbar } from 'react-native-paper'
 
-import PDFReader from 'rn-pdf-reader-js'
 import HeaderNavBar from '../components/HeaderNavBar'
 
 export default function CertificateDownload({ navigation }) {
@@ -30,7 +27,7 @@ export default function CertificateDownload({ navigation }) {
     if (
       response.status === 400 ||
       response.status === 401 ||
-      response.status != 200
+      response.status !== 200
     ) {
       setSnackMessage(
         `Download Error.${response.message}` || 'Some error occured'

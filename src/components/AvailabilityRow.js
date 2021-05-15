@@ -1,15 +1,7 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import {
-  Surface,
-  Text as TextPaper,
-  Modal,
-  Portal,
-  Text as PaperText,
-  Button,
-  Provider,
-} from 'react-native-paper'
+import { Surface, Text as TextPaper } from 'react-native-paper'
 import { getValue } from '../DataStore/Storage'
 
 export default function AvailabilityRow({
@@ -19,16 +11,6 @@ export default function AvailabilityRow({
   setModalContent,
   derivedAgeProp,
 }) {
-  // const [age, setAge] = useState('')
-  // useEffect(() => {
-  //   const getFilters = async () => {
-  //     const derived_age = await getValue('age_filter')
-  //     const derived_vaccine = await getValue('vaccine_filter')
-  //     setAge(derived_age)
-  //   }
-  //   getFilters()
-  // }, [derivedAgeProp])
-
   const getDate = (v) => {
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
     const months = [

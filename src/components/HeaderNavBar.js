@@ -1,34 +1,12 @@
 import React from 'react'
 
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Image,
-  Dimensions,
-  Keyboard,
-} from 'react-native'
+import { StyleSheet, View, Dimensions, Keyboard } from 'react-native'
 import { getStatusBarHeight } from 'react-native-status-bar-height'
-import { IconButton } from 'react-native-paper'
-import Icon from 'react-native-vector-icons/FontAwesome'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const HeaderNavBar = ({ navigation, goBack, resetScreen, whichScreen }) => {
   return (
     <View style={styles.root}>
-      {/* <TouchableOpacity
-        onPress={() => {
-          Keyboard.dismiss()
-          navigation.openDrawer()
-        }}
-      >
-        <Image
-          style={styles.image}
-          source={require('../assets/arrow_back.png')}
-        />
-      </TouchableOpacity> */}
-
       <MaterialCommunityIcons
         name="format-list-bulleted"
         color="black"
