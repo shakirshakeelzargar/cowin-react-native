@@ -1,4 +1,5 @@
 import React from 'react'
+
 import {
   StyleSheet,
   Text,
@@ -9,11 +10,14 @@ import {
   Keyboard,
 } from 'react-native'
 import { getStatusBarHeight } from 'react-native-status-bar-height'
+import { IconButton } from 'react-native-paper'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
-const HeaderNavBar = ({ navigation, goBack }) => {
+const HeaderNavBar = ({ navigation, goBack, resetScreen, whichScreen }) => {
   return (
     <View style={styles.root}>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => {
           Keyboard.dismiss()
           navigation.openDrawer()
@@ -21,20 +25,37 @@ const HeaderNavBar = ({ navigation, goBack }) => {
       >
         <Image
           style={styles.image}
-          source={require('../assets/navdrawericon.png')}
+          source={require('../assets/arrow_back.png')}
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
+
+      <MaterialCommunityIcons
+        name="format-list-bulleted"
+        color="black"
+        size={40}
+        onPress={() => {
+          Keyboard.dismiss()
+          navigation.openDrawer()
+        }}
+      />
       {goBack && (
-        <TouchableOpacity
+        <MaterialCommunityIcons
+          name="arrow-left-circle"
+          color="black"
+          size={40}
           onPress={() => {
-            navigation.goBack()
+            Keyboard.dismiss()
+
+            if (resetScreen) {
+              navigation.reset({
+                index: 0,
+                routes: [{ name: whichScreen }],
+              })
+            } else {
+              navigation.goBack()
+            }
           }}
-        >
-          <Image
-            style={styles.image}
-            source={require('../assets/arrow_back.png')}
-          />
-        </TouchableOpacity>
+        />
       )}
     </View>
   )
@@ -56,6 +77,6 @@ const styles = StyleSheet.create({
   image: {
     width: 24,
     height: 24,
-    paddingRight: 30,
+    paddingRight: 50,
   },
 })

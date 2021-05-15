@@ -2,7 +2,15 @@
 /* eslint-disable no-console */
 /* eslint-disable consistent-return */
 import React, { useState } from 'react'
-import { TouchableOpacity, StyleSheet, View, Keyboard } from 'react-native'
+import {
+  TouchableOpacity,
+  StyleSheet,
+  View,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native'
+import CountDown from 'react-native-countdown-component'
 import { Text, Snackbar } from 'react-native-paper'
 import jwt_decode from 'jwt-decode'
 import Background from '../components/Background'
@@ -32,7 +40,8 @@ export default function LoginScreen({ navigation }) {
   const [visible, setVisible] = useState(false)
   const [snackMessage, setSnackMessage] = useState('')
   const [txnId, setTxnId] = useState('')
-
+  const [disabled, setDisabled] = useState(true)
+  const [counter, setCounter] = useState(180)
   const onToggleSnackBar = () => setVisible(!visible)
 
   const onDismissSnackBar = () => setVisible(false)
@@ -92,13 +101,22 @@ export default function LoginScreen({ navigation }) {
       setTxnId(response.txnId)
       setShowPhone(false)
       setShowOtp(true)
+      setCounter(180)
+      setDisabled(true)
     }
     // navigation.reset({
     //   index: 0,
     //   routes: [{ name: 'Dashboard' }],
     // })
   }
-
+  const changeNumber = () => {
+    setShowPhone(true)
+    setShowOtp(false)
+    setCounter(180)
+    setDisabled(true)
+    setReqButtontext('Request OTP')
+    setDisableReqButton(false)
+  }
   return (
     <Background>
       <HeaderNavBar navigation={navigation} goBack={false} />
@@ -155,6 +173,53 @@ export default function LoginScreen({ navigation }) {
           >
             {optButtonText}
           </Button>
+          <View
+            style={{
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Button
+              style={{ width: '50%' }}
+              mode="outlined"
+              onPress={onReqOtppressed}
+              disabled={disabled}
+            >
+              Resend OTP
+            </Button>
+            <CountDown
+              key={counter}
+              until={counter}
+              size={15}
+              onFinish={() => setDisabled(() => false)}
+              separatorStyle={{ color: 'black' }}
+              digitStyle={{ backgroundColor: '#FFF' }}
+              digitTxtStyle={{ color: 'black' }}
+              timeToShow={['M', 'S']}
+              showSeparator
+              timeLabels={{ m: '', s: '' }}
+            />
+          </View>
+          <View
+            style={{
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Button
+              style={{ width: '75%' }}
+              mode="outlined"
+              onPress={changeNumber}
+            >
+              Change Number
+            </Button>
+          </View>
         </View>
       )}
 

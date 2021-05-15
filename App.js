@@ -5,8 +5,11 @@ import { createDrawerNavigator } from '@react-navigation/drawer'
 import { Provider } from 'react-native-paper'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
+import { gestureHandlerRootHOC } from 'react-native-gesture-handler'
+import { AppRegistry } from 'react-native'
 import { theme } from './src/core/theme'
 import NavBar from './src/components/NavBar'
+import { name as appName } from './app.json'
 import {
   CertificateDownload,
   StartScreen,
@@ -26,7 +29,7 @@ import { setValue, getValue } from './src/DataStore/Storage'
 
 const Stack = createStackNavigator()
 const Drawer = createDrawerNavigator()
-
+AppRegistry.registerComponent(appName, () => gestureHandlerRootHOC(App))
 export default function App() {
   return (
     <Provider theme={theme}>

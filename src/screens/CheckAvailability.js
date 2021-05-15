@@ -3,7 +3,14 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable default-case */
 import React, { useEffect, useState } from 'react'
-import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native'
+import {
+  Dimensions,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  ActivityIndicator,
+} from 'react-native'
 import {
   Surface,
   Text as TextPaper,
@@ -12,19 +19,24 @@ import {
   Portal,
   Provider,
 } from 'react-native-paper'
+import useIsMounted from 'ismounted'
+// import { StackActions, NavigationActions } from 'react-navigation';
 import BackButton from '../components/BackButton'
 import Button from '../components/Button'
+import Header from '../components/Header'
 import { getCalenderByPin } from '../DataStore/API'
 import Background from '../components/Background'
-
 import AvailabilityRow from '../components/AvailabilityRow'
 import { getValue, setValue } from '../DataStore/Storage'
 import HeaderNavBar from '../components/HeaderNavBar'
 
 const CheckAvailability = ({ navigation }) => {
-  const [slots, setSlots] = useState([])
+  const isMounted = useIsMounted()
+  const [slots, setSlots] = useState('loading')
+  const [isCallData, setIsCallData] = useState(true)
   const [derivedAge, setDerivedAge] = useState('')
   const [derivedVaccine, setDerivedVaccine] = useState('')
+  const [firstTime, setFirstTime] = useState(true)
   const getFilters = async () => {
     const derived_age = await getValue('age_filter')
     const derived_vaccine = await getValue('vaccine_filter')
@@ -39,10 +51,12 @@ const CheckAvailability = ({ navigation }) => {
     setSlots(JSON.parse(filtered_data))
   }
   useEffect(() => {
+    // if (isMounted.current) {
     const callData = async () => {
       const temp = await getSlotData()
     }
     callData()
+    // }
   }, [])
   const getDate = (v) => {
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -111,14 +125,19 @@ const CheckAvailability = ({ navigation }) => {
     return tempData
   }
   useEffect(() => {
-    const updateData = async () => {
-      const unfiltered_data = await getValue('uuunfiltered_data')
-      // console.log(unfiltered_data)
-      const filtered_data = filterData(JSON.parse(unfiltered_data))
-      setSlots(JSON.parse(filtered_data))
-      // console.log(JSON.parse(filtered_data))
+    if (!firstTime) {
+      const updateData = async () => {
+        const unfiltered_data = await getValue('uuunfiltered_data')
+        // console.log(unfiltered_data)
+        const filtered_data = filterData(JSON.parse(unfiltered_data))
+        setSlots(JSON.parse(filtered_data))
+        // console.log(JSON.parse(filtered_data))
+      }
+      setSlots('loading')
+      updateData()
+    } else {
+      setFirstTime(false)
     }
-    updateData()
   }, [derivedAge, derivedVaccine])
   const handleFilterChange = async (fil) => {
     switch (fil) {
@@ -150,9 +169,23 @@ const CheckAvailability = ({ navigation }) => {
   const showModal = () => setVisible(true)
   const hideModal = () => setVisible(false)
   const containerStyle = { backgroundColor: 'white', padding: 20 }
+  // const resetAction = StackActions.reset({
+  //   index: 0,
+  //   actions: [NavigationActions.navigate({ routeName: 'SearchSlots' })],
+  // })
+  // const resetActionFunction = navigation.reset({
+  //   index: 0,
+  //   routes: [{ name: 'SearchSlots' }],
+  // })
+  // const onFocus = () => {
+  //   getSlotData()
+  //   unsubscribe()
+  // }
+  // const unsubscribe = navigation.addListener('focus', () => {
+  //   onFocus()
+  // })
   return (
     <Provider>
-      
       <Portal>
         <Modal
           visible={visible}
@@ -179,7 +212,7 @@ const CheckAvailability = ({ navigation }) => {
               <Button
                 mode="contained"
                 onPress={() => {
-                  // hideModal()
+                  hideModal()
                   navigation.navigate('WebViewRegistration')
                 }}
               >
@@ -207,7 +240,6 @@ const CheckAvailability = ({ navigation }) => {
       </Portal>
 
       <View>
-        
         {/* <Button
         mode="contained"
         onPress={onGetCalender}
@@ -215,7 +247,12 @@ const CheckAvailability = ({ navigation }) => {
       >
         Get Calender
       </Button> */}
-      <HeaderNavBar navigation={navigation} goBack={true} />
+        <HeaderNavBar
+          navigation={navigation}
+          goBack={true}
+          resetScreen={true}
+          whichScreen="SearchSlots"
+        />
         <View style={styles.filters}>
           <ButtonPaper
             mode={derivedAge === '18' ? 'contained' : 'outlined'}
@@ -258,8 +295,8 @@ const CheckAvailability = ({ navigation }) => {
             </Surface>
           ))}
         </View>
-        <ScrollView contentInset={{ bottom: 280 }}>
-          {slots.length > 0 ? (
+        <ScrollView contentInset={{ bottom: 300 }}>
+          {slots.length > 0 && slots !== 'loading' ? (
             slots.map((slot, i) => (
               <AvailabilityRow
                 slot_data={slot}
@@ -267,10 +304,31 @@ const CheckAvailability = ({ navigation }) => {
                 showModal={showModal}
                 setModalContent={setModalContent}
                 key={i}
+                derivedAgeProp={derivedAge}
               />
             ))
+          ) : slots === 'loading' ? (
+            <View
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <ActivityIndicator size="large" color="#5d00ff" />
+            </View>
           ) : (
-            <Text>No data to display</Text>
+            <View
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Header>No Data Found</Header>
+            </View>
           )}
         </ScrollView>
       </View>

@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import {
   Surface,
@@ -17,14 +17,18 @@ export default function AvailabilityRow({
   hideModal,
   showModal,
   setModalContent,
+  derivedAgeProp,
 }) {
-  const [age, setAge] = useState('')
-  const getFilters = async () => {
-    const derived_age = await getValue('age_filter')
-    const derived_vaccine = await getValue('vaccine_filter')
-    setAge(derived_age)
-  }
-  getFilters()
+  // const [age, setAge] = useState('')
+  // useEffect(() => {
+  //   const getFilters = async () => {
+  //     const derived_age = await getValue('age_filter')
+  //     const derived_vaccine = await getValue('vaccine_filter')
+  //     setAge(derived_age)
+  //   }
+  //   getFilters()
+  // }, [derivedAgeProp])
+
   const getDate = (v) => {
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
     const months = [
@@ -65,7 +69,7 @@ export default function AvailabilityRow({
           <View style={styles.rowHeader}>
             <Text style={styles.rowHeaderText}>{slot_data.name}</Text>
             <Text style={styles.rowHeaderText}>
-              {age + '+'} & {slot_data.fee_type}
+              {derivedAgeProp + '+'} & {slot_data.fee_type}
             </Text>
           </View>
           <View style={styles.rowSlots}>
@@ -89,7 +93,7 @@ export default function AvailabilityRow({
               return (
                 <Surface
                   style={{
-                    backgroundColor: slotValue > 0 ? '#018f51' : 'red',
+                    backgroundColor: slotValue > 0 ? '#018f51' : 'grey',
                     height: 20,
                     width: 50,
                     alignItems: 'center',

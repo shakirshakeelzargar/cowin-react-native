@@ -1,19 +1,30 @@
 import React from 'react'
-import { View, StyleSheet, Text } from 'react-native'
+import {
+  View,
+  StyleSheet,
+  Text,
+  Platform,
+  KeyboardAvoidingView,
+} from 'react-native'
 import { TextInput as Input } from 'react-native-paper'
 import { theme } from '../core/theme'
 
 export default function TextInput({ errorText, description, ...props }) {
   return (
     <View style={styles.container}>
-      <Input
-        keyboardType="numeric"
-        style={styles.input}
-        selectionColor={theme.colors.primary}
-        underlineColor="transparent"
-        mode="outlined"
-        {...props}
-      />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}
+      >
+        <Input
+          keyboardType="numeric"
+          style={styles.input}
+          selectionColor={theme.colors.primary}
+          underlineColor="transparent"
+          mode="outlined"
+          {...props}
+        />
+      </KeyboardAvoidingView>
       {description && !errorText ? (
         <Text style={styles.description}>{description}</Text>
       ) : null}

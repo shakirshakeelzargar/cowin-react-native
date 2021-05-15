@@ -15,6 +15,8 @@ export const requestOtp = async (phone) => {
     headers: {
       accept: 'application/json',
       'Content-Type': 'application/json',
+      'User-Agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
     },
     data,
   }
@@ -33,7 +35,7 @@ export const validateOtp = async (otp, txnId) => {
     otp: SHA256(otp).toString(CryptoJS.enc.Hex),
     txnId,
   })
-  console.log(data)
+  // console.log(data)
 
   const config = {
     method: 'post',
@@ -41,6 +43,8 @@ export const validateOtp = async (otp, txnId) => {
     headers: {
       accept: 'application/json',
       'Content-Type': 'application/json',
+      'User-Agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
     },
     data,
   }
@@ -53,10 +57,9 @@ export const validateOtp = async (otp, txnId) => {
 }
 
 export const getCertificate = async (requestID, tokenID) => {
-  var axios = require('axios')
-  console.log(tokenID)
-  console.log(requestID)
-  var config = {
+  // console.log(tokenID)
+  // console.log(requestID)
+  const config = {
     method: 'get',
     url:
       'https://cdn-api.co-vin.in/api/v2/registration/certificate/public/download?beneficiary_reference_id=' +
@@ -64,6 +67,8 @@ export const getCertificate = async (requestID, tokenID) => {
     headers: {
       accept: 'application/pdf',
       Authorization: 'Bearer ' + tokenID,
+      'User-Agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
     },
   }
 
@@ -93,10 +98,10 @@ export const getCertificate = async (requestID, tokenID) => {
       )
         .then(async ({ uri }) => {
           await MediaLibrary.createAssetAsync(uri)
-          console.log('File saved')
+          // console.log('File saved')
         })
         .catch((err) => {
-          console.log('error', err)
+          // console.log('error', err)
         })
     }
 
@@ -113,6 +118,8 @@ export const getStates = async () => {
     headers: {
       accept: 'application/json',
       'Accept-Language': 'hi_IN',
+      'User-Agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
     },
   }
 
@@ -131,6 +138,8 @@ export const getDistrictsByState = async (stateId) => {
     headers: {
       accept: 'application/json',
       'Accept-Language': 'hi_IN',
+      'User-Agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
     },
   }
   try {
@@ -158,9 +167,11 @@ export const getCalenderByPin = async (pincode) => {
     headers: {
       accept: 'application/json',
       'Accept-Language': 'hi_IN',
+      'User-Agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
     },
   }
-  console.log(config)
+  // console.log(config)
   try {
     const response = await axios(config)
     // console.log(response.data)
@@ -188,9 +199,11 @@ export const getCalenderByDistrict = async (state, district) => {
     headers: {
       accept: 'application/json',
       'Accept-Language': 'hi_IN',
+      'User-Agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
     },
   }
-  console.log(config)
+  // console.log(config)
 
   try {
     const response = await axios(config)
@@ -206,7 +219,9 @@ export const checkAppUpdate = async () => {
   const config = {
     method: 'get',
     url: 'https://vaccineapp.blueturrets.com/',
-    headers: {},
+    headers: {
+      'User-Agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',},
   }
   try {
     const response = await axios(config)

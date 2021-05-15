@@ -109,14 +109,20 @@ const SearchSlots = ({ navigation }) => {
       if (!vaccine && !age) {
         setSnackMessage('Please select Age and Vaccine')
         setVisible(true)
-      } else if (!vaccine) {
+        return ''
+      }
+      if (!vaccine) {
         setSnackMessage('Please select Vaccine')
         setVisible(true)
-      } else if (!age) {
+        return ''
+      }
+      if (!age) {
         setSnackMessage('Please select Age')
         setVisible(true)
+        return ''
       }
       setSearchButtonDisabled(true)
+      console.log(age, vaccine)
       const response = await getCalenderByPin(pincode.value)
       // console.log("Hereeeee: ",JSON.stringify(response.data))
       const temp2 = await setValue(
@@ -177,45 +183,56 @@ const SearchSlots = ({ navigation }) => {
     }
   }
   useEffect(() => {
-    if (searchBy === 'pincode') {
-      setShowDistrict(false)
-      setShowPin(true)
-    } else if (searchBy === 'district') {
-      setShowDistrict(true)
-      setShowPin(false)
+    if (searchBy) {
+      if (searchBy === 'pincode') {
+        setShowDistrict(false)
+        setShowPin(true)
+      } else if (searchBy === 'district') {
+        setShowDistrict(true)
+        setShowPin(false)
+      }
     }
   }, [searchBy])
 
   useEffect(() => {
-    const loadStates = async () => {
-      const responsee = await getStates()
-      const filteredStates = responsee.map((v) => ({
-        label: v.state_name,
-        value: v.state_id,
-      }))
-      setStateList(filteredStates)
-    }
-    if (showDistrict === true) {
-      loadStates()
+    if (showDistrict) {
+      const loadStates = async () => {
+        const responsee = await getStates()
+        const filteredStates = responsee.map((v) => ({
+          label: v.state_name,
+          value: v.state_id,
+        }))
+        setStateList(filteredStates)
+      }
+      if (showDistrict === true) {
+        loadStates()
+      }
     }
   }, [showDistrict])
 
   useEffect(() => {
-    const loadDistricts = async () => {
-      const responsee = await getDistrictsByState(String(state))
-      const filteredDistricts = responsee.map((v) => ({
-        label: v.district_name,
-        value: v.district_id,
-      }))
-      setDistrictList(filteredDistricts)
+    if (state) {
+      const loadDistricts = async () => {
+        const responsee = await getDistrictsByState(String(state))
+        const filteredDistricts = responsee.map((v) => ({
+          label: v.district_name,
+          value: v.district_id,
+        }))
+        setDistrictList(filteredDistricts)
+      }
+      loadDistricts()
     }
-    loadDistricts()
   }, [state])
 
   return (
     <View style={styles.root}>
       <Background onPress={() => Keyboard.dismiss()}>
-        <HeaderNavBar navigation={navigation} goBack={true} />
+        <HeaderNavBar
+          navigation={navigation}
+          goBack={true}
+          resetScreen={true}
+          whichScreen="Dashboard"
+        />
         {/* <BackButton
           goBack={() => {
             navigation.navigate('Dashboard')
